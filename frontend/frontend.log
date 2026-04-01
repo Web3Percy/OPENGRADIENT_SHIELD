@@ -1,0 +1,66 @@
+
+> frontend@0.1.0 dev
+> next dev
+
+ ⚠ Port 3000 is in use, trying 3001 instead.
+ ⚠ Port 3001 is in use, trying 3002 instead.
+  ▲ Next.js 14.2.35
+  - Local:        http://localhost:3002
+
+ ✓ Starting...
+ ✓ Ready in 1797ms
+ ○ Compiling / ...
+ ⨯ ./src/app/page.tsx
+Error: 
+  [31mx[0m You're importing a component that needs useState. It only works in a Client Component but none of its parents are marked with "use client", so they're Server Components by default.
+  [31m|[0m Learn more: https://nextjs.org/docs/getting-started/react-essentials
+  [31m|[0m 
+  [31m|[0m 
+   ,-[[36;1;4m/app/OPENGRADIENT_SHIELD/frontend/src/app/page.tsx[0m:1:1]
+ [2m1[0m | import { Shield, AlertTriangle, CheckCircle2, Search, Loader2 } from "lucide-react"
+ [2m2[0m | import { useState } from "react"
+   : [31;1m         ^^^^^^^^[0m
+ [2m3[0m | import { motion, AnimatePresence } from "framer-motion"
+ [2m4[0m | 
+ [2m5[0m | interface AnalysisResult {
+   `----
+
+Import trace for requested module:
+./src/app/page.tsx
+ ⨯ ./src/app/page.tsx
+Error: 
+  [31mx[0m You're importing a component that needs useState. It only works in a Client Component but none of its parents are marked with "use client", so they're Server Components by default.
+  [31m|[0m Learn more: https://nextjs.org/docs/getting-started/react-essentials
+  [31m|[0m 
+  [31m|[0m 
+   ,-[[36;1;4m/app/OPENGRADIENT_SHIELD/frontend/src/app/page.tsx[0m:1:1]
+ [2m1[0m | import { Shield, AlertTriangle, CheckCircle2, Search, Loader2 } from "lucide-react"
+ [2m2[0m | import { useState } from "react"
+   : [31;1m         ^^^^^^^^[0m
+ [2m3[0m | import { motion, AnimatePresence } from "framer-motion"
+ [2m4[0m | 
+ [2m5[0m | interface AnalysisResult {
+   `----
+
+Import trace for requested module:
+./src/app/page.tsx
+ ⨯ ./src/app/page.tsx
+Error: 
+  [31mx[0m You're importing a component that needs useState. It only works in a Client Component but none of its parents are marked with "use client", so they're Server Components by default.
+  [31m|[0m Learn more: https://nextjs.org/docs/getting-started/react-essentials
+  [31m|[0m 
+  [31m|[0m 
+   ,-[[36;1;4m/app/OPENGRADIENT_SHIELD/frontend/src/app/page.tsx[0m:1:1]
+ [2m1[0m | import { Shield, AlertTriangle, CheckCircle2, Search, Loader2 } from "lucide-react"
+ [2m2[0m | import { useState } from "react"
+   : [31;1m         ^^^^^^^^[0m
+ [2m3[0m | import { motion, AnimatePresence } from "framer-motion"
+ [2m4[0m | 
+ [2m5[0m | interface AnalysisResult {
+   `----
+
+Import trace for requested module:
+./src/app/page.tsx
+ GET / 500 in 13876ms
+ ✓ Compiled /_error in 3.6s (1553 modules)
+ GET / 200 in 324ms
