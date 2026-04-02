@@ -41,7 +41,7 @@ export default function Home() {
     setResult(null)
 
     try {
-      const response = await fetch("http://localhost:8000/analyze-contract", {
+      const response = await fetch("http://localhost:8000/audit-contract", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -50,7 +50,7 @@ export default function Home() {
       })
 
       if (!response.ok) {
-        throw new Error("Failed to analyze contract")
+        throw new Error("Failed to audit contract")
       }
 
       const data = await response.json()

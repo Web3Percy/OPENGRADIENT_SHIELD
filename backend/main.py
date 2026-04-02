@@ -30,7 +30,7 @@ if og_private_key:
 
 etherscan_api_key = os.environ.get("ETHERSCAN_API_KEY")
 
-class AnalyzeContractRequest(BaseModel):
+class AuditRequest(BaseModel):
     contract_address: str
 
 
@@ -81,8 +81,8 @@ async def fetch_contract_source(address: str) -> str:
         return f"Error fetching from Etherscan: {str(e)}"
 
 
-@app.post("/analyze-contract")
-async def analyze_contract(request: AnalyzeContractRequest) -> AnalyzeContractResponse:
+@app.post("/audit-contract")
+async def audit_contract(request: AuditRequest) -> AnalyzeContractResponse:
     """
     AI Contract Analysis endpoint powered by OpenGradient SDK.
     Fetches source code and uses Meta-Llama-3-8B-Instruct model for a 'Rug Check'.
