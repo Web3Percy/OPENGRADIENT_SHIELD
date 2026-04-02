@@ -4,10 +4,17 @@ import { Shield, AlertTriangle, CheckCircle2, Search, Loader2 } from "lucide-rea
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 
+interface Finding {
+  issue: string
+  status: string
+}
+
 interface AnalysisResult {
+  address: string
   security_score: number
-  risk_flags: string[]
-  reasoning: string
+  risk_level: string
+  findings: Finding[]
+  recommendation: string
 }
 
 export default function Home() {
@@ -34,7 +41,7 @@ export default function Home() {
     setResult(null)
 
     try {
-      const response = await fetch("http://localhost:8000/analyze-contract", {
+      const response = await fetch("http://localhost:8000/audit-contract", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -43,7 +50,7 @@ export default function Home() {
       })
 
       if (!response.ok) {
-        throw new Error("Failed to analyze contract")
+        throw new Error("Failed to audit contract")
       }
 
       const data = await response.json()
@@ -53,9 +60,15 @@ export default function Home() {
       setError("Failed to connect to analysis server. Showing simulated results.")
       setTimeout(() => {
         setResult({
+          address: contractAddress,
           security_score: Math.floor(Math.random() * 100),
-          risk_flags: ["Honeypot risk detected", "Unverified source code", "Minting function present"],
-          reasoning: "The contract exhibits patterns commonly associated with malicious actors or has significant security flaws."
+          risk_level: "High",
+          findings: [
+            { issue: "Honeypot", status: "Detected" },
+            { issue: "Unverified Source", status: "Detected" },
+            { issue: "Minting Function", status: "Detected" }
+          ],
+          recommendation: "The contract exhibits patterns commonly associated with malicious actors or has significant security flaws."
         })
       }, 1500)
     } finally {
@@ -105,7 +118,8 @@ export default function Home() {
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5 }}
-          className="bg-white/70 backdrop-blur-xl rounded-3xl shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] border border-white/40 mb-8 overflow-hidden"
+          style={{ backdropFilter: 'blur(10px)', background: 'rgba(255, 255, 255, 0.2)', border: '1px solid rgba(255, 255, 255, 0.3)' }}
+          className="rounded-3xl shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] mb-8 overflow-hidden"
         >
           <div className="p-8">
             <h2 className="text-2xl font-bold mb-3 text-gray-900">Rug Check</h2>
@@ -130,11 +144,11 @@ export default function Home() {
               >
                 {isAnalyzing ? (
                   <>
-                    <Loader2 className="mr-3 h-6 w-6 animate-spin" />
+                    <Loader2 className="mr-3 h-6 w-6 animate-spin text-[#48C6B6]" />
                     Scanning...
                   </>
                 ) : (
-                  "Scan Contract"
+                  "Audit"
                 )}
               </button>
             </form>
@@ -203,39 +217,45 @@ export default function Home() {
                   {/* Summary & Reasoning */}
                   <div className="flex-1 text-center md:text-left flex flex-col justify-center h-full">
                     <div className="flex items-center justify-center md:justify-start gap-3 mb-4">
-                      {result.security_score >= 80 ? (
+                      {result.risk_level === 'Low' || result.security_score >= 80 ? (
                         <CheckCircle2 className="w-10 h-10 text-[#48C6B6]" />
                       ) : (
                         <AlertTriangle className={`w-10 h-10 ${result.security_score >= 50 ? 'text-[#F18F3B]' : 'text-red-500'}`} />
                       )}
                       <h3 className="text-3xl font-bold text-gray-900">
-                        {result.security_score >= 80 ? 'Likely Safe' : result.security_score >= 50 ? 'Moderate Risk' : 'High Risk Detected'}
+                        {result.risk_level} Risk
                       </h3>
                     </div>
                     <p className="text-xl text-gray-600 leading-relaxed font-medium">
-                      {result.reasoning}
+                      {result.recommendation}
                     </p>
                   </div>
                 </div>
 
-                {/* Risk Flags List */}
-                {result.risk_flags && result.risk_flags.length > 0 ? (
-                  <div className="p-6 rounded-2xl bg-red-50/50 border border-red-100">
-                    <h4 className="font-bold text-red-700 mb-4 flex items-center gap-2 text-lg">
-                      <AlertTriangle className="w-5 h-5" />
-                      Identified Risk Flags
+                {/* Findings List */}
+                {result.findings && result.findings.length > 0 ? (
+                  <div className="p-6 rounded-2xl bg-gray-50/50 border border-gray-200">
+                    <h4 className="font-bold text-gray-700 mb-4 flex items-center gap-2 text-lg">
+                      <Shield className="w-5 h-5 text-gray-500" />
+                      Findings
                     </h4>
                     <ul className="space-y-3">
-                      {result.risk_flags.map((flaw, index) => (
+                      {result.findings.map((finding, index) => (
                         <motion.li 
                           key={index}
                           initial={{ opacity: 0, x: -10 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: index * 0.1 }}
-                          className="flex items-start gap-3 text-red-600 font-medium"
+                          className="flex items-center justify-between text-gray-700 font-medium bg-white p-3 rounded-xl shadow-sm border border-gray-100"
                         >
-                          <span className="w-1.5 h-1.5 rounded-full bg-red-500 mt-2.5 shrink-0" />
-                          <span className="text-lg capitalize">{flaw}</span>
+                          <span className="text-lg">{finding.issue}</span>
+                          <span className={`px-3 py-1 rounded-full text-sm font-bold ${
+                            finding.status.toLowerCase() === 'safe' || finding.status.toLowerCase() === 'renounced' || finding.status.toLowerCase() === 'hidden/none'
+                              ? 'bg-[#48C6B6]/20 text-[#48C6B6]'
+                              : 'bg-red-100 text-red-600'
+                          }`}>
+                            {finding.status}
+                          </span>
                         </motion.li>
                       ))}
                     </ul>
@@ -247,7 +267,7 @@ export default function Home() {
                     </div>
                     <div>
                       <h4 className="font-bold text-[#48C6B6] text-lg">Clean Scan</h4>
-                      <p className="text-[#48C6B6]/80 font-medium">No obvious risk flags (e.g. honeypot, minting) detected in this security analysis.</p>
+                      <p className="text-[#48C6B6]/80 font-medium">No obvious risk flags detected in this security analysis.</p>
                     </div>
                   </div>
                 )}
