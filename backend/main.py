@@ -56,7 +56,7 @@ async def fetch_contract_source(address: str) -> str:
     if not etherscan_api_key:
         return "Source code fetching disabled (No Etherscan API Key). Proceeding with address-based heuristics."
         
-    url = "https://api.etherscan.io/api"
+    url = os.environ.get("ETHERSCAN_API_URL", "https://api.etherscan.io/api")
     params = {
         "module": "contract",
         "action": "getsourcecode",
