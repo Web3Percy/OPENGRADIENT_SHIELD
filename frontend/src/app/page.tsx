@@ -17,6 +17,40 @@ interface AnalysisResult {
   recommendation: string
 }
 
+const OpenGradientLogo = ({ className = "" }: { className?: string }) => {
+  return (
+    <svg
+      viewBox="0 0 100 100"
+      className={className}
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <defs>
+        <linearGradient id="og-vibrant-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#00FFFF" />   {/* Cyan */}
+          <stop offset="33%" stopColor="#F18F3B" />  {/* Orange */}
+          <stop offset="66%" stopColor="#FF00FF" />  {/* Fuchsia */}
+          <stop offset="100%" stopColor="#A436D2" /> {/* Violet */}
+        </linearGradient>
+
+        <filter id="og-glow" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="3" result="blur" />
+          <feComposite in="SourceGraphic" in2="blur" operator="over" />
+        </filter>
+      </defs>
+
+      <g filter="url(#og-glow)" fill="none" stroke="url(#og-vibrant-gradient)" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round">
+        {/* Interlocking knot paths resembling the image */}
+        <path d="M50 15 L65 30 L65 45 L50 60 L35 45 L35 30 Z" />
+        <path d="M85 50 L70 65 L55 65 L40 50 L55 35 L70 35 Z" />
+        <path d="M50 85 L35 70 L35 55 L50 40 L65 55 L65 70 Z" />
+        <path d="M15 50 L30 35 L45 35 L60 50 L45 65 L30 65 Z" />
+        {/* Central dot */}
+        <circle cx="50" cy="50" r="5" fill="url(#og-vibrant-gradient)" stroke="none" />
+      </g>
+    </svg>
+  );
+};
+
 export default function Home() {
   const [contractAddress, setContractAddress] = useState("")
   const [isAnalyzing, setIsAnalyzing] = useState(false)
@@ -102,9 +136,9 @@ export default function Home() {
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ type: "spring", stiffness: 260, damping: 20 }}
-            className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-og-br mb-6 shadow-xl"
+            className="inline-flex items-center justify-center shrink-0 w-10 h-10 rounded-full bg-white/10 backdrop-blur-md mb-6 shadow-[0_0_20px_rgba(255,0,255,0.6)] border border-white/20"
           >
-            <Shield className="w-10 h-10 text-white" />
+            <OpenGradientLogo className="w-10 h-10" />
           </motion.div>
           <h1 className="text-5xl font-extrabold tracking-tight mb-4 text-gradient-og pb-1">
             OpenGradient Shield
